@@ -1,28 +1,65 @@
-let width = 420;
-let height = 640;
+const width = 420;
+const height = 640;
+const diameter = 75;
+const radius = diameter / 2;
+const topMargin = 75;
+const groozikWidth = 75;
+const groozikHeight = 30;
+const forCenterHeightMargin = diameter + topMargin;
+const forCenterWidthMargin = width / 2;
+const stierdzenWidth = 10;
 
 let draw = SVG('drawing').size(width, height);
 
 let bg = draw.rect(width, height).fill('#FF0000');
 
-function display(a, d) {
-    let diameter = 75;
-    let radius = diameter / 2;
-    let topMargin = 75;
-    let groozikWidth = 75;
-    let groozikHeight = 30;
-    let forCenterHeightMargin = diameter + topMargin;
-    let forCenterWidthMargin = width / 2;
-    let stierdzenWidth = 10;
+let thread;
+let freeGroozik;
+let krestovinGrooziky = [];
+let a = 0;
 
-    draw.line(forCenterWidthMargin + radius, forCenterHeightMargin, forCenterWidthMargin + radius, forCenterHeightMargin + diameter + a * 2 * Math.PI).stroke({color: '#8000FF', width: 2});
-    draw.rect(groozikWidth, groozikHeight).fill('#FF00FF').cx(forCenterWidthMargin + radius).cy(forCenterHeightMargin + diameter + a * 2 * Math.PI);
+function init(d) {
+    thread = draw.line(forCenterWidthMargin + radius, forCenterHeightMargin, forCenterWidthMargin + radius, forCenterHeightMargin + diameter).stroke({color: '#8000FF', width: 2});
+    freeGroozik = draw.rect(groozikWidth, groozikHeight).fill('#FF00FF').cx(forCenterWidthMargin + radius);
 
-    for (let angle = 0; angle < 360; angle += 90) {
-        draw.rect(stierdzenWidth, forCenterHeightMargin).fill('#FFFF00').cx(forCenterWidthMargin).transform({rotation: angle + a, cx: forCenterWidthMargin, cy: forCenterHeightMargin});
-        draw.rect(groozikWidth, groozikHeight).fill('#000000').cx(forCenterWidthMargin).cy(topMargin - d).transform({rotation: angle + a, cx: forCenterWidthMargin, cy: forCenterHeightMargin})
+    for (let i = 0; i < 4; ++i) {
+        krestovinGrooziky.push(draw.rect(stierdzenWidth, forCenterHeightMargin).fill('#FFFF00').cx(forCenterWidthMargin));
+        krestovinGrooziky.push(draw.rect(groozikWidth, groozikHeight).fill('#000000').cx(forCenterWidthMargin).cy(topMargin - d));
     }
+
     draw.ellipse(diameter, diameter).fill('#00FF00').cx(forCenterWidthMargin).cy(forCenterHeightMargin);
 }
 
-display(20, 10);
+function display(a) {
+    thread.size(2, diameter + a / 180 * Math.PI * radius);
+    freeGroozik.cy(forCenterHeightMargin + diameter + a / 180 * Math.PI * radius);
+
+    for (let i = 0; i < 4; ++i) {
+        krestovinGrooziky[2*i].transform({rotation: a + 90 * i, cx: forCenterWidthMargin, cy: forCenterHeightMargin});
+        krestovinGrooziky[2*i + 1].transform({rotation: a + 90 * i, cx: forCenterWidthMargin, cy: forCenterHeightMargin});
+    }
+}
+
+function update(dt) {
+    a += dt * 100;
+    display(a);
+    if (a > 720) {
+        a = 0;
+    }
+}
+
+let lastTime;
+let animFrame;
+
+function callback(ms) {
+    if (lastTime) {
+        update((ms-lastTime)/1000);
+    }
+
+    lastTime = ms;
+    animFrame = requestAnimationFrame(callback);
+}
+
+init(10);
+
+callback();
