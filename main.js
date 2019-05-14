@@ -8,6 +8,7 @@ const groozikHeight = 30;
 const forCenterHeightMargin = diameter + topMargin;
 const forCenterWidthMargin = width / 2;
 const stierdzenWidth = 10;
+const threadInitial = 200;
 
 let draw = SVG('drawing').size(width, height);
 
@@ -19,7 +20,7 @@ let krestovinGrooziky = [];
 let a = 0;
 
 function init(d) {
-    thread = draw.line(forCenterWidthMargin + radius, forCenterHeightMargin, forCenterWidthMargin + radius, forCenterHeightMargin + diameter).stroke({color: '#8000FF', width: 2});
+    thread = draw.line(forCenterWidthMargin + radius, forCenterHeightMargin, forCenterWidthMargin + radius, forCenterHeightMargin + threadInitial).stroke({color: '#8000FF', width: 2});
     freeGroozik = draw.rect(groozikWidth, groozikHeight).fill('#FF00FF').cx(forCenterWidthMargin + radius);
 
     for (let i = 0; i < 4; ++i) {
@@ -31,8 +32,8 @@ function init(d) {
 }
 
 function display(a) {
-    thread.size(2, diameter + a / 180 * Math.PI * radius);
-    freeGroozik.cy(forCenterHeightMargin + diameter + a / 180 * Math.PI * radius);
+    thread.size(2, threadInitial + a / 180 * Math.PI * radius);
+    freeGroozik.cy(forCenterHeightMargin + threadInitial + a / 180 * Math.PI * radius);
 
     for (let i = 0; i < 4; ++i) {
         krestovinGrooziky[2*i].transform({rotation: a + 90 * i, cx: forCenterWidthMargin, cy: forCenterHeightMargin});
@@ -40,26 +41,41 @@ function display(a) {
     }
 }
 
+let start = document.getElementById("bStart");
+
+start.onclick = function() {
+    a = 0;
+    isRunning = true;
+    animFrame = requestAnimationFrame(callback);
+};
+
+let isRunning = false;
+
 function update(dt) {
     a += dt * 100;
-    display(a);
     if (a > 720) {
         a = 0;
+        isRunning = false;
     }
+    display(a);
 }
 
-let lastTime;
+let lastTime = 0;
 let animFrame;
 
 function callback(ms) {
-    if (lastTime) {
-        update((ms-lastTime)/1000);
+    if (lastTime !== 0) {
+        update((ms - lastTime) / 1000);
     }
 
-    lastTime = ms;
-    animFrame = requestAnimationFrame(callback);
+    if (isRunning) {
+        lastTime = ms;
+        animFrame = requestAnimationFrame(callback);
+    } else {
+        lastTime = 0;
+    }
 }
 
 init(10);
 
-callback();
+display(0);
