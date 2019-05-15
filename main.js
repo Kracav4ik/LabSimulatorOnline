@@ -50,15 +50,19 @@ Matter.World.add(engine.world, centralPhyCirc);
 let start = document.getElementById("bStart");
 
 start.onclick = function() {
-    Matter.Body.setAngularVelocity(centralPhyCirc,1);
+    Matter.Body.setAngularVelocity(centralPhyCirc,0);
     Matter.Body.setAngle(centralPhyCirc, 0);
-    isRunning = true;
-    animFrame = requestAnimationFrame(callback);
+    if (!isRunning) {
+        isRunning = true;
+        animFrame = requestAnimationFrame(callback);
+    }
 };
 
 let isRunning = false;
 
 function update(dt) {
+    Matter.Body.applyForce(centralPhyCirc,{x : 0, y : radius}, {x : -20, y : 0});
+    Matter.Body.applyForce(centralPhyCirc,{x : 0, y : -radius}, {x : 20, y : 0});
     Matter.Engine.update(engine, dt);
     let a = centralPhyCirc.angle;
     if (a > 720) {
