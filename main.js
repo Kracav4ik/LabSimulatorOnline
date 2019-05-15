@@ -17,7 +17,6 @@ let bg = draw.rect(width, height).fill('#FF0000');
 let thread;
 let freeGroozik;
 let krestovinGrooziky = [];
-let a = 0;
 
 function init(d) {
     thread = draw.line(forCenterWidthMargin + radius, forCenterHeightMargin, forCenterWidthMargin + radius, forCenterHeightMargin + threadInitial).stroke({color: '#8000FF', width: 2});
@@ -41,10 +40,18 @@ function display(a) {
     }
 }
 
+let engine = Matter.Engine.create();
+
+let centralPhyCirc = Matter.Bodies.circle(0, 0, radius, {density : 1});
+centralPhyCirc.frictionAir = 0;
+
+Matter.World.add(engine.world, centralPhyCirc);
+
 let start = document.getElementById("bStart");
 
 start.onclick = function() {
-    a = 0;
+    Matter.Body.setAngularVelocity(centralPhyCirc,1);
+    Matter.Body.setAngle(centralPhyCirc, 0);
     isRunning = true;
     animFrame = requestAnimationFrame(callback);
 };
@@ -52,7 +59,8 @@ start.onclick = function() {
 let isRunning = false;
 
 function update(dt) {
-    a += dt * 100;
+    Matter.Engine.update(engine, dt);
+    let a = centralPhyCirc.angle;
     if (a > 720) {
         a = 0;
         isRunning = false;
@@ -65,7 +73,7 @@ let animFrame;
 
 function callback(ms) {
     if (lastTime !== 0) {
-        update((ms - lastTime) / 1000);
+        update(ms - lastTime);
     }
 
     if (isRunning) {
