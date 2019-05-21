@@ -1,7 +1,7 @@
 const width = 1080;
 const height = 1540;
 
-const G = 9.80665e-2;
+const G = 9.80665e2;
 
 const pxPerCm = 37.5;
 const diameterCm = 5;
@@ -120,7 +120,7 @@ let animFrame;
 
 function callback(ms) {
     if (isRunning && lastTime !== 0) {
-        update(ms - lastTime);
+        update((ms - lastTime) / 1000);
     }
 
     if (isRunning) {
