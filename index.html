@@ -8,7 +8,16 @@
 
 <div id="drawing"></div>
 
-<button id="bStart" type="button">Start</button>
+<label for="sDistance">Расстояние грузиков от оси вращения</label>
+<div>
+    <input type="range" min="4.00" value="6.00" max="10.00" step="0.01" id="sDistance" />
+    <p>h (см): <span>20</span></p>
+    <p>r (см): <span id="value"></span></p>
+    <p>t (с): <span id="time"></span></p>
+</div>
+<br>
+<button id="bStart" type="button">Старт</button>
+<button id="bStop" type="button">Сброс</button>
 
 <script type="text/javascript" src="svg.js"></script>
 <script type="text/javascript" src="matter.js"></script>
