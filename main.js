@@ -95,6 +95,7 @@ let m = document.getElementById("krestovinGrizikMass");
 let h = document.getElementById("height");
 let R = document.getElementById("radius");
 let value = document.getElementById("value");
+let epsilon = document.getElementById("epsilon");
 let timeValue = document.getElementById("time");
 value.innerHTML = dalachestb.value;
 m0.innerHTML = grizikMassGram;
@@ -118,7 +119,9 @@ function update(dt) {
     let a = centralPhyCirc.angle;
     if (Math.PI * a / 180 * radiusCm > platformHeightCm) {
         isRunning = false;
-        timeValue.innerHTML = (Date.now() - startTime) / 1000;
+        const t = (Date.now() - startTime) / 1000;
+        timeValue.innerHTML = t;
+        epsilon.innerHTML = 2 * platformHeightCm / radiusCm / t / t;
     }
     display(a);
 }
