@@ -93,12 +93,14 @@ start.onclick = function() {
 let m0 = document.getElementById("grizikMass");
 let m = document.getElementById("krestovinGrizikMass");
 let h = document.getElementById("height");
+let R = document.getElementById("radius");
 let value = document.getElementById("value");
 let timeValue = document.getElementById("time");
 value.innerHTML = dalachestb.value;
 m0.innerHTML = grizikMassGram;
 m.innerHTML = krestovinGrizikMassGram;
 h.innerHTML = platformHeightCm;
+R.innerHTML = radiusCm;
 
 dalachestb.oninput = function() {
     distanceCm = this.value;
