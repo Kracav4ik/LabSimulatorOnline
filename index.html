@@ -5,23 +5,41 @@
     <title>LabSimulatorOnline</title>
 </head>
 <body>
+<style>
+    .column {
+        float: left;
+        width: 50%;
+    }
 
-<div id="drawing"></div>
-
-<label for="sDistance">Расстояние грузиков от оси вращения</label>
-<div>
-    <input type="range" min="4.00" value="6.00" max="10.00" step="0.01" id="sDistance" />
-    <p>h (см): <span>20</span></p>
-    <p>r (см): <span id="value"></span></p>
-    <p>t (с): <span id="time"></span></p>
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+</style>
+<div class="row">
+    <div class="column">
+        <div id="drawing"></div>
+    </div>
+    <div class="column">
+        <label for="sDistance">Расстояние грузиков от оси вращения (r)</label>
+        <div>
+            <input type="range" min="5.00" value="12.00" max="20.00" step="0.01" id="sDistance" />
+            <p>m<sub>0</sub>, г: <span id="grizikMass"></span></p>
+            <p>m, г: <span id="krestovinGrizikMass"></span></p>
+            <p>h, см: <span id="height"></span></p>
+            <p>r, см: <span id="value"></span></p>
+            <p>t, с: <span id="time"></span></p>
+        </div>
+        <br>
+        <button id="bStart" type="button">Старт</button>
+        <button id="bStop" type="button">Сброс</button>
+    </div>
 </div>
-<br>
-<button id="bStart" type="button">Старт</button>
-<button id="bStop" type="button">Сброс</button>
 
-<script type="text/javascript" src="svg.js"></script>
-<script type="text/javascript" src="matter.js"></script>
-<script type="text/javascript" src="main.js"></script>
-
+    <script type="text/javascript" src="svg.js"></script>
+    <script type="text/javascript" src="matter.js"></script>
+    <script type="text/javascript" src="main.js"></script>
 </body>
 </html>

@@ -1,21 +1,21 @@
-const width = 1080;
-const height = 1540;
+const width = 800;
+const height = 800;
 
 const G = 9.80665e2;
 
-const pxPerCm = 37.5;
+const platformHeightCm = 20;
+const pxPerCm = 15;
 const diameterCm = 5;
 const radiusCm = diameterCm / 2;
-const topMargin = 300;
 const groozikWidthCm = 2;
 const groozikHeightCm = 1;
-const forCenterHeightMargin = diameterCm * pxPerCm + topMargin;
-const forCenterWidthMargin = width / 2;
-const stierdzenHeightCm = 10;
+const stierdzenHeightCm = 20;
 const stierdzenWidthCm = 0.2;
 const threadInitialCm = 5;
-const gruzikMassGram = 300;
-const forceMassGram = 200;
+const krestovinGrizikMassGram = 300;
+const grizikMassGram = 200;
+const forCenterHeightMargin = (radiusCm + stierdzenHeightCm + groozikHeightCm) * pxPerCm;
+const forCenterWidthMargin = width / 2;
 
 let dalachestb = document.getElementById("sDistance");
 
@@ -43,7 +43,7 @@ function init() {
     freeGroozik = draw.rect(groozikWidthCm * pxPerCm, groozikHeightCm * pxPerCm).fill('#FF00FF').cx(forCenterWidthMargin + radiusCm * pxPerCm);
 
     for (let i = 0; i < 4; ++i) {
-        krestovinGrooziky.push(draw.rect(stierdzenWidthCm * pxPerCm, stierdzenHeightCm * pxPerCm).fill('#FFFF00').cx(forCenterWidthMargin).y(stierdzenHeightCm * pxPerCm - topMargin));
+        krestovinGrooziky.push(draw.rect(stierdzenWidthCm * pxPerCm, stierdzenHeightCm * pxPerCm).fill('#FFFF00').cx(forCenterWidthMargin).y(forCenterHeightMargin - stierdzenHeightCm * pxPerCm));
         krestovinGrooziky.push(draw.rect(groozikWidthCm * pxPerCm, groozikHeightCm * pxPerCm).fill('#000000').cx(forCenterWidthMargin));
     }
 
@@ -58,7 +58,7 @@ function display(a) {
 
     for (let i = 0; i < 4; ++i) {
         krestovinGrooziky[2*i].transform({rotation: a + 90 * i, cx: forCenterWidthMargin, cy: forCenterHeightMargin});
-        krestovinGrooziky[2*i + 1].cy(forCenterHeightMargin - groozikHeightCm * pxPerCm / 2 - distanceCm * pxPerCm).transform({rotation: a + 90 * i, cx: forCenterWidthMargin, cy: forCenterHeightMargin});
+        krestovinGrooziky[2*i + 1].cy(forCenterHeightMargin - distanceCm * pxPerCm).transform({rotation: a + 90 * i, cx: forCenterWidthMargin, cy: forCenterHeightMargin});
     }
 }
 
@@ -83,16 +83,22 @@ start.onclick = function() {
     startTime = Date.now();
     Matter.Body.setAngularVelocity(centralPhyCirc,0);
     Matter.Body.setAngle(centralPhyCirc, 0);
-    Matter.Body.setInertia(centralPhyCirc, centralPhyCircInertia + 4 * distanceCm * distanceCm * gruzikMassGram);
+    Matter.Body.setInertia(centralPhyCirc, centralPhyCircInertia + 4 * distanceCm * distanceCm * krestovinGrizikMassGram);
     if (!isRunning) {
         isRunning = true;
         animFrame = requestAnimationFrame(callback);
     }
 };
 
+let m0 = document.getElementById("grizikMass");
+let m = document.getElementById("krestovinGrizikMass");
+let h = document.getElementById("height");
 let value = document.getElementById("value");
 let timeValue = document.getElementById("time");
 value.innerHTML = dalachestb.value;
+m0.innerHTML = grizikMassGram;
+m.innerHTML = krestovinGrizikMassGram;
+h.innerHTML = platformHeightCm;
 
 dalachestb.oninput = function() {
     distanceCm = this.value;
@@ -104,11 +110,11 @@ dalachestb.oninput = function() {
 let isRunning = false;
 
 function update(dt) {
-    Matter.Body.applyForce(centralPhyCirc,{x : 0, y : radiusCm}, {x : -forceMassGram * G / 2, y : 0});
-    Matter.Body.applyForce(centralPhyCirc,{x : 0, y : -radiusCm}, {x : forceMassGram * G / 2, y : 0});
+    Matter.Body.applyForce(centralPhyCirc,{x : 0, y : radiusCm}, {x : -grizikMassGram * G / 2, y : 0});
+    Matter.Body.applyForce(centralPhyCirc,{x : 0, y : -radiusCm}, {x : grizikMassGram * G / 2, y : 0});
     Matter.Engine.update(engine, dt);
     let a = centralPhyCirc.angle;
-    if (Math.PI * a / 180 * radiusCm > 20) {
+    if (Math.PI * a / 180 * radiusCm > platformHeightCm) {
         isRunning = false;
         timeValue.innerHTML = (Date.now() - startTime) / 1000;
     }
