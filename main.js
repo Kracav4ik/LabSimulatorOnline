@@ -123,7 +123,7 @@ function update(dt) {
         isRunning = false;
         const t = (Date.now() - startTime) / 1000;
         timeValue.innerHTML = t;
-        epsilon.innerHTML = 2 * platformHeightCm / radiusCm / t / t;
+        epsilon.innerHTML = (2 * platformHeightCm / radiusCm / t / t).toPrecision(5);
     }
     display(a);
 }
