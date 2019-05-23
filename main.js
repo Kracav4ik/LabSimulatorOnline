@@ -25,6 +25,8 @@ let draw = SVG('drawing').size(width, height);
 
 let bg = draw.rect(width, height).fill('#FF0000');
 
+// document.getElementById("data").style.margin += document.getElementById("picture").offsetWidth;
+
 let thread;
 let freeGroozik;
 let krestovinGrooziky = [];

@@ -12,9 +12,14 @@
         top: 0;
 
     }
-    .column {
+    .picture {
         float: left;
-        width: 50%;
+        position: absolute;
+    }
+
+    .data {
+        position: absolute;
+        left: 820px;
     }
 
     .row:after {
@@ -24,10 +29,10 @@
     }
 </style>
 <div class="row">
-    <div class="column">
+    <div class="picture">
         <div id="drawing"></div>
     </div>
-    <div class="column">
+    <div class="data">
         <label for="sDistance">Расстояние грузиков от оси вращения (r)</label>
         <div>
             <input type="range" min="5.00" value="12.00" max="20.00" step="0.01" id="sDistance" />
