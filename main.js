@@ -17,6 +17,8 @@ const grizikMassGram = 200;
 const forCenterHeightMargin = (radiusCm + stierdzenHeightCm + groozikHeightCm) * pxPerCm;
 const forCenterWidthMargin = width / 2;
 
+const maxDt = 20;
+
 let dalachestb = document.getElementById("sDistance");
 
 let distanceCm = dalachestb.value;
@@ -132,8 +134,10 @@ let lastTime = 0;
 let animFrame;
 
 function callback(ms) {
-    if (isRunning && lastTime !== 0) {
-        update((ms - lastTime) / 1000);
+    let dt = ms - lastTime;
+    while (isRunning && lastTime !== 0 && dt > 0) {
+        update(Math.min(dt, maxDt) / 1000);
+        dt -= maxDt;
     }
 
     if (isRunning) {
