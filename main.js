@@ -34,6 +34,7 @@ let distanceCm = dalachestb.value;
 let draw = SVG('drawing').size(width, height);
 
 draw.image("bg.jpg", width, height);
+draw.image("ruler.jpg").x(blockLeft - 35).y(blockTop + 90);
 
 let thread1;
 let thread2;
