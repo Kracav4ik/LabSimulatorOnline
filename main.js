@@ -1,5 +1,7 @@
-const width = 1200;
-const height = 800;
+const width = 720;
+const height = 640;
+const centerMarginLeft = 320;
+const centerMarginTop = 320;
 
 const G = 9.80665e2;
 
@@ -15,10 +17,9 @@ const threadInitialCm = 5;
 const threadWidthCm = 0.4;
 const krestovinGrizikMassGram = 300;
 const grizikMassGram = 200;
-const forCenterMargin = (diameterCm + stierdzenHeightCm + groozikHeightCm) * pxPerCm;
 
-const blockLeft = forCenterMargin + 350;
-const blockTop = forCenterMargin - 200;
+const blockLeft = centerMarginLeft + 350;
+const blockTop = centerMarginTop - 200;
 const blockDiameterCm = diameterCm * 0.4;
 
 const joinerThreadLength = 402;
@@ -32,9 +33,7 @@ let distanceCm = dalachestb.value;
 
 let draw = SVG('drawing').size(width, height);
 
-let bg = draw.image("bg.png", width, height);
-
-// document.getElementById("data").style.margin += document.getElementById("picture").offsetWidth;
+draw.image("bg.jpg", width, height);
 
 let thread1;
 let thread2;
@@ -58,13 +57,13 @@ const threadPattern = draw.pattern(6, 21, function(add) {
 });
 const joinerThreadPattern = draw.pattern(6, 21, function(add) {
     add.image("thread.png");
-}).x(forCenterMargin + (radiusCm - threadWidthCm) * pxPerCm);
+}).x(centerMarginLeft + (radiusCm - threadWidthCm) * pxPerCm);
 
 function init() {
     thread1 = draw.rect().fill(threadPattern).transform(threadTransform);
     thread2 = draw.rect(threadWidthCm * pxPerCm, joinerThreadLength).fill(joinerThreadPattern)
-        .x(forCenterMargin + (radiusCm - threadWidthCm) * pxPerCm).y(forCenterMargin)
-        .transform({cx: forCenterMargin, cy: forCenterMargin, rotation: joinerThreadRotation});
+        .x(centerMarginLeft + (radiusCm - threadWidthCm) * pxPerCm).y(centerMarginTop)
+        .transform({cx: centerMarginLeft, cy: centerMarginTop, rotation: joinerThreadRotation});
 
     freeGroozik = draw.image("gruzik.png", groozikWidthCm * pxPerCm, groozikHeightCm * pxPerCm)
         .cx(blockLeft + (blockDiameterCm/2 - threadWidthCm / 2) * pxPerCm);
@@ -74,15 +73,15 @@ function init() {
     }).x(-stierdzenWidthCm / 2 * pxPerCm);
 
     for (let i = 0; i < 4; ++i) {
-        krestovinGrooziky.push(draw.rect(stierdzenWidthCm * pxPerCm, stierdzenHeightCm * pxPerCm).fill(stierdzenPattern).cx(forCenterMargin).y(forCenterMargin - stierdzenHeightCm * pxPerCm));
-        krestovinGrooziky.push(draw.image("gruzik.png", groozikWidthCm * pxPerCm, groozikHeightCm * pxPerCm).cx(forCenterMargin));
+        krestovinGrooziky.push(draw.rect(stierdzenWidthCm * pxPerCm, stierdzenHeightCm * pxPerCm).fill(stierdzenPattern).cx(centerMarginLeft).y(centerMarginTop - stierdzenHeightCm * pxPerCm));
+        krestovinGrooziky.push(draw.image("gruzik.png", groozikWidthCm * pxPerCm, groozikHeightCm * pxPerCm).cx(centerMarginLeft));
     }
 
     const shkivPattern = draw.pattern(diameterCm * pxPerCm, diameterCm * pxPerCm, function(add) {
         add.image("shkiv.png")
-    }).cx(forCenterMargin).cy(forCenterMargin);
+    }).cx(centerMarginLeft).cy(centerMarginTop);
 
-    shkiv = draw.circle(diameterCm * pxPerCm).fill(shkivPattern).cx(forCenterMargin).cy(forCenterMargin);
+    shkiv = draw.circle(diameterCm * pxPerCm).fill(shkivPattern).cx(centerMarginLeft).cy(centerMarginTop);
 
     const blockPattern = draw.pattern(blockDiameterCm * pxPerCm, blockDiameterCm * pxPerCm, function(add) {
         add.image("block.png").transform({scale: blockDiameterCm / diameterCm / 2})
@@ -100,8 +99,8 @@ function display(a) {
     shkiv.transform({rotation: a});
     block.transform({rotation: a / blockDiameterCm * diameterCm});
     for (let i = 0; i < 4; ++i) {
-        krestovinGrooziky[2*i].transform({rotation: a + 90 * i, cx: forCenterMargin, cy: forCenterMargin});
-        krestovinGrooziky[2*i + 1].cy(forCenterMargin - distanceCm * pxPerCm).transform({rotation: a + 90 * i, cx: forCenterMargin, cy: forCenterMargin});
+        krestovinGrooziky[2*i].transform({rotation: a + 90 * i, cx: centerMarginLeft, cy: centerMarginTop});
+        krestovinGrooziky[2*i + 1].cy(centerMarginTop - distanceCm * pxPerCm).transform({rotation: a + 90 * i, cx: centerMarginLeft, cy: centerMarginTop});
     }
 }
 
