@@ -17,6 +17,13 @@ const krestovinGrizikMassGram = 300;
 const grizikMassGram = 200;
 const forCenterMargin = (diameterCm + stierdzenHeightCm + groozikHeightCm) * pxPerCm;
 
+const blockLeft = forCenterMargin + 350;
+const blockTop = forCenterMargin - 200;
+const blockDiameterCm = diameterCm * 0.4;
+
+const joinerThreadLength = 402;
+const joinerThreadRotation = 243.5;
+
 const maxDt = 20;
 
 let dalachestb = document.getElementById("sDistance");
@@ -44,19 +51,24 @@ function cylinderInertia(m, r, l) {
     return m * r * r / 4 + m * l * l / 12;
 }
 
-const threadTransform = {x : (forCenterMargin + (diameterCm - threadWidthCm + stierdzenHeightCm) * pxPerCm), y :forCenterMargin - stierdzenHeightCm * pxPerCm};
+const threadTransform = {x : blockLeft + (blockDiameterCm/2 - threadWidthCm) * pxPerCm, y : blockTop};
 
 const threadPattern = draw.pattern(6, 21, function(add) {
     add.image("thread.png");
 });
+const joinerThreadPattern = draw.pattern(6, 21, function(add) {
+    add.image("thread.png");
+}).x(forCenterMargin + (radiusCm - threadWidthCm) * pxPerCm);
 
 function init() {
     draw.image("table.png", 120, 60).cx(forCenterMargin + radiusCm * pxPerCm).y(forCenterMargin + (threadInitialCm + stierdzenHeightCm - groozikHeightCm) * pxPerCm);
     thread1 = draw.rect().fill(threadPattern).transform(threadTransform);
-    thread2 = draw.rect(threadWidthCm * pxPerCm, (stierdzenHeightCm + 2 * diameterCm) * pxPerCm - 10).fill(threadPattern)
-        .x(forCenterMargin + (radiusCm - threadWidthCm) * pxPerCm - 1.5).y(forCenterMargin - threadWidthCm * pxPerCm)
-        .transform({cx: forCenterMargin, cy: forCenterMargin, rotation: 220});
-    freeGroozik = draw.image("weight.png", groozikWidthCm * pxPerCm, groozikHeightCm * pxPerCm).cx(forCenterMargin + (diameterCm - threadWidthCm / 2 + stierdzenHeightCm) * pxPerCm);
+    thread2 = draw.rect(threadWidthCm * pxPerCm, joinerThreadLength).fill(joinerThreadPattern)
+        .x(forCenterMargin + (radiusCm - threadWidthCm) * pxPerCm).y(forCenterMargin)
+        .transform({cx: forCenterMargin, cy: forCenterMargin, rotation: joinerThreadRotation});
+
+    freeGroozik = draw.image("weight.png", groozikWidthCm * pxPerCm, groozikHeightCm * pxPerCm)
+        .cx(blockLeft + (blockDiameterCm/2 - threadWidthCm / 2) * pxPerCm);
 
     const stierdzenPattern = draw.pattern(22, 162, function(add) {
         add.image("stierdzen.png")
@@ -73,20 +85,21 @@ function init() {
 
     shkiv = draw.circle(diameterCm * pxPerCm).fill(shkivPattern).cx(forCenterMargin).cy(forCenterMargin);
 
-    const blockPattern = draw.pattern(2 * diameterCm * pxPerCm, 2 * diameterCm * pxPerCm, function(add) {
-        add.image("block.png")
-    }).cx(forCenterMargin + stierdzenHeightCm * pxPerCm).cy(forCenterMargin - stierdzenHeightCm * pxPerCm);
-    block = draw.circle(2 *  diameterCm * pxPerCm).fill(blockPattern).cx(forCenterMargin + stierdzenHeightCm * pxPerCm).cy(forCenterMargin - stierdzenHeightCm * pxPerCm);
+    const blockPattern = draw.pattern(blockDiameterCm * pxPerCm, blockDiameterCm * pxPerCm, function(add) {
+        add.image("block.png").transform({scale: blockDiameterCm / diameterCm / 2})
+    }).cx(blockLeft).cy(blockTop);
+    block = draw.circle(blockDiameterCm * pxPerCm).fill(blockPattern).cx(blockLeft).cy(blockTop);
 
     display(0);
 }
 
 function display(a) {
     thread1.size(threadWidthCm * pxPerCm, (threadInitialCm + a / 180 * Math.PI * radiusCm) * pxPerCm);
-    freeGroozik.cy(forCenterMargin + (threadInitialCm - stierdzenHeightCm + a / 180 * Math.PI * radiusCm) * pxPerCm);
+    freeGroozik.cy(blockTop + (threadInitialCm + a / 180 * Math.PI * radiusCm) * pxPerCm);
     threadPattern.cy((a / 180 * Math.PI * radiusCm) * pxPerCm);
+    joinerThreadPattern.cy((a / 180 * Math.PI * radiusCm) * pxPerCm);
     shkiv.transform({rotation: a});
-    block.transform({rotation: a / 2});
+    block.transform({rotation: a / blockDiameterCm * diameterCm});
     for (let i = 0; i < 4; ++i) {
         krestovinGrooziky[2*i].transform({rotation: a + 90 * i, cx: forCenterMargin, cy: forCenterMargin});
         krestovinGrooziky[2*i + 1].cy(forCenterMargin - distanceCm * pxPerCm).transform({rotation: a + 90 * i, cx: forCenterMargin, cy: forCenterMargin});
