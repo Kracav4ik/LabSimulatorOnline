@@ -61,13 +61,12 @@ const joinerThreadPattern = draw.pattern(6, 21, function(add) {
 }).x(forCenterMargin + (radiusCm - threadWidthCm) * pxPerCm);
 
 function init() {
-    draw.image("table.png", 120, 60).cx(forCenterMargin + radiusCm * pxPerCm).y(forCenterMargin + (threadInitialCm + stierdzenHeightCm - groozikHeightCm) * pxPerCm);
     thread1 = draw.rect().fill(threadPattern).transform(threadTransform);
     thread2 = draw.rect(threadWidthCm * pxPerCm, joinerThreadLength).fill(joinerThreadPattern)
         .x(forCenterMargin + (radiusCm - threadWidthCm) * pxPerCm).y(forCenterMargin)
         .transform({cx: forCenterMargin, cy: forCenterMargin, rotation: joinerThreadRotation});
 
-    freeGroozik = draw.image("weight.png", groozikWidthCm * pxPerCm, groozikHeightCm * pxPerCm)
+    freeGroozik = draw.image("gruzik.png", groozikWidthCm * pxPerCm, groozikHeightCm * pxPerCm)
         .cx(blockLeft + (blockDiameterCm/2 - threadWidthCm / 2) * pxPerCm);
 
     const stierdzenPattern = draw.pattern(22, 162, function(add) {
