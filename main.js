@@ -25,7 +25,7 @@ const blockDiameterCm = diameterCm * 0.4;
 const joinerThreadLength = 402;
 const joinerThreadRotation = 243.5;
 
-const maxDt = 20;
+const maxDt = 9;
 
 let dalachestb = document.getElementById("sDistance");
 
@@ -94,19 +94,20 @@ function init() {
 }
 
 function display(a) {
-    thread1.size(threadWidthCm * pxPerCm, (threadInitialCm + a / 180 * Math.PI * radiusCm) * pxPerCm);
-    freeGroozik.cy(blockTop + (threadInitialCm + a / 180 * Math.PI * radiusCm) * pxPerCm);
-    threadPattern.cy((a / 180 * Math.PI * radiusCm) * pxPerCm);
-    joinerThreadPattern.cy((a / 180 * Math.PI * radiusCm) * pxPerCm);
-    shkiv.transform({rotation: a});
-    block.transform({rotation: a / blockDiameterCm * diameterCm});
+    thread1.size(threadWidthCm * pxPerCm, (threadInitialCm + a * radiusCm) * pxPerCm);
+    freeGroozik.cy(blockTop + (threadInitialCm + a * radiusCm) * pxPerCm);
+    threadPattern.cy((a * radiusCm) * pxPerCm);
+    joinerThreadPattern.cy((a * radiusCm) * pxPerCm);
+    const aDeg = a / Math.PI * 180;
+    shkiv.transform({rotation: aDeg});
+    block.transform({rotation: aDeg / blockDiameterCm * diameterCm});
     for (let i = 0; i < 4; ++i) {
-        krestovinGrooziky[2*i].transform({rotation: a + 90 * i, cx: centerMarginLeft, cy: centerMarginTop});
-        krestovinGrooziky[2*i + 1].cy(centerMarginTop - distanceCm * pxPerCm).transform({rotation: a + 90 * i, cx: centerMarginLeft, cy: centerMarginTop});
+        krestovinGrooziky[2*i].transform({rotation: aDeg + 90 * i, cx: centerMarginLeft, cy: centerMarginTop});
+        krestovinGrooziky[2*i + 1].cy(centerMarginTop - distanceCm * pxPerCm).transform({rotation: aDeg + 90 * i, cx: centerMarginLeft, cy: centerMarginTop});
     }
 }
 
-let engine = Matter.Engine.create();
+let engine = Matter.Engine.create({world: Matter.World.create({gravity: {x: 0, y: 0}})});
 
 let centralPhyCirc = Matter.Bodies.circle(0, 0, radiusCm, {density : 1, friction: 0, frictionStatic: 0, frictionAir: 0});
 
@@ -115,9 +116,9 @@ Matter.World.add(engine.world, centralPhyCirc);
 let start = document.getElementById("bStart");
 let stop = document.getElementById("bStop");
 let startTime = Date.now();
-let cMass = cylinderMass(7.7, radiusCm, 2);
-Matter.Body.setMass(centralPhyCirc, cMass);
-let centralPhyCircInertia = cylinderInertia(cMass, radiusCm, 2);
+let cMass = cylinderMass(7.7, radiusCm, 3);
+let centralPhyCircInertia = cMass * radiusCm * radiusCm / 2;
+let stierdzenInertia = cylinderInertia(cMass/10, stierdzenWidthCm / 2, 2 * stierdzenHeightCm);
 
 stop.onclick = function() {
     display(0);
@@ -127,7 +128,7 @@ start.onclick = function() {
     startTime = Date.now();
     Matter.Body.setAngularVelocity(centralPhyCirc,0);
     Matter.Body.setAngle(centralPhyCirc, 0);
-    Matter.Body.setInertia(centralPhyCirc, centralPhyCircInertia + 4 * distanceCm * distanceCm * krestovinGrizikMassGram);
+    Matter.Body.setInertia(centralPhyCirc, centralPhyCircInertia + 2 * stierdzenInertia + 4 * distanceCm * distanceCm * krestovinGrizikMassGram);
     if (!isRunning) {
         isRunning = true;
         animFrame = requestAnimationFrame(callback);
@@ -161,7 +162,7 @@ function update(dt) {
     Matter.Body.applyForce(centralPhyCirc,{x : 0, y : -radiusCm}, {x : grizikMassGram * G / 2, y : 0});
     Matter.Engine.update(engine, dt);
     let a = centralPhyCirc.angle;
-    if (Math.PI * a / 180 * radiusCm > platformHeightCm) {
+    if (a * radiusCm > platformHeightCm) {
         isRunning = false;
         const t = (Date.now() - startTime) / 1000;
         timeValue.innerHTML = t;
