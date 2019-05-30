@@ -7,15 +7,10 @@
 </head>
 <body>
 <style>
-    .authors {
-        background: white;
-        position: absolute;
-        top: 0;
-
-    }
     .picture {
         float: left;
         position: absolute;
+        top:50px;
     }
 
     .data {
@@ -46,6 +41,7 @@
         transition: all 0.3s ease-out;
         position: absolute;
         left: 8px;
+        top: 20px;
         padding-left: 10px;
         padding-right: 10px;
         padding-bottom: 2px;
@@ -102,6 +98,15 @@
         max-height: 30%;
         overflow: auto;
     }
+    .name {
+        transition: all 200ms;
+        text-decoration: none;
+        font-size: 30px;
+        position: absolute;
+        top: 10px;
+        left: 300px;
+        background: white;
+    }
 </style>
 <div class="row">
     <div class="picture">
@@ -123,6 +128,9 @@
         <button id="bStart" type="button">Старт</button>
         <button id="bStop" type="button">Сброс</button>
     </div>
+</div>
+<div class="name">
+    Маятник Обербека
 </div>
 <div>
     <a class="button" href="#popup1">Авторы</a>
